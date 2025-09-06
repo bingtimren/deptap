@@ -1,0 +1,39 @@
+{
+  "name": "degtap",
+  "version": "1.0.0",
+  "description": "A minimalist, typed, 'supply and demand' package for decoupling users and supplier of some dependencies",
+  "type": "module",
+  "module": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "imports": {
+    "#deptap": "./lib/index.ts"
+  },
+  "exports": {
+    "import": {
+      "types": "./dist/lib/index.d.ts",
+      "default": "./dist/lib/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -fr dist && tsc -p tsconfig.json",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bingtieren/degtap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

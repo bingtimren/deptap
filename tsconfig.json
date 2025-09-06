@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "nodenext", 
+    "moduleResolution": "nodenext",
+    "declaration": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./dist", 
+    "baseUrl": ".",
+    "paths": {
+      "#deptap": ["lib/index.ts"]
+    }
+  },
+  "include": ["lib/**/*"] // Only include lib for the build
+}
