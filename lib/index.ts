@@ -1,9 +1,9 @@
+// Container supports injecting non-component types as dependencies
+export type NonComponentType = unknown;
+
 // component type is something may be managed by a containter
 // it depends on some dependencies to be supplied by the container before it can be used
 // and it might be supplied to some other components as a dependency
-
-export type NonComponentType = unknown;
-
 export type ComponentType<ComponentManifestType> = {
     depends : {[k in keyof Partial<ComponentManifestType>] : unknown}
 };
@@ -31,16 +31,20 @@ export function containerFactory<Registry extends ComponentRegistryType>(compone
             return false;
         }
     }
-    const container : ContainerType<Registry> = ( k : keyof Registry) =>  {
+    const circularDependencyAwareContainer : ( k : keyof Registry, componentDependencyChain: (keyof Registry)[]) =>  Registry[typeof k] = ( k, componentDependencyChain) =>  {
         const kComponent = componentRegistry[k];
         if (componentDependencyHasBeenSupplied[k]) {
             return kComponent;
         } else {
             if (isComponent(kComponent)) {
+                if (componentDependencyChain.includes(k)) {
+                    throw new Error(`Circular dependency detected: ${[...componentDependencyChain, k].join(' -> ')}`);
+                }
                 // must first supply all dependencies of kComponent
+                const componentDependencyChainWithK = [...componentDependencyChain, k];
                 for (const eachDependencyKey of Object.getOwnPropertyNames(kComponent.depends) as (keyof Registry)[]) {
                     // recursively calls the factory to get each of its dependencies and supply to the component
-                    const dependencyOfKComponentForTheDependencyKey = container(eachDependencyKey);
+                    const dependencyOfKComponentForTheDependencyKey = circularDependencyAwareContainer(eachDependencyKey, componentDependencyChainWithK);
                     kComponent.depends[eachDependencyKey] = dependencyOfKComponentForTheDependencyKey;
                 }
             } else {
@@ -50,5 +54,5 @@ export function containerFactory<Registry extends ComponentRegistryType>(compone
             return kComponent;
         }
     };
-    return container;
+    return (k) => circularDependencyAwareContainer(k, []);
 }
