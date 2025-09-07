@@ -1,0 +1,4 @@
+{
+    "typescript.tsserver.log": "requestTime",
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false
+}
