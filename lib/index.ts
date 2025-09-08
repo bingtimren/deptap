@@ -1,19 +1,36 @@
 
-// A component is an object that has a "depends" property, which is an object mapping dependency names to their types
-export type Depends<DependencyManifest> = {
+/**
+ * A component is an object that has a "depends" property, which is an object mapping dependency names to their values
+ */ 
+export type Component<DependencyManifest extends object> = {
     depends : DependencyManifest
 };
 
+
+/**
+ * Consistent dependency manifest makes sure that the dependency manifest of each member component is consistent with (partial of) the overall dependency manifest
+ */
+export type ConsistentDependencyManifest<DependencyManifest extends object> = {
+    [k in keyof DependencyManifest]: DependencyManifest[k] extends {depends : object} ? Component<Partial<DependencyManifest>> : DependencyManifest[k];
+}
+
+/**
+ * A container is a function that takes a key and returns the corresponding component or value from the manifest, after resolving its dependencies
+ */
 export type ContainerType<DependencyManifest> = <K extends keyof DependencyManifest>(k: K) => DependencyManifest[K];
 
-// a factory that can produce a container given a component registry
-export function containerFactory<DependencyManifest>(componentRegistry : DependencyManifest) : ContainerType<DependencyManifest> {
+/**
+ * A factory that can accepts a consistent dependency manifest, and returns a container that can resolve dependencies
+ * @param componentRegistry 
+ * @returns 
+ */
+export function containerFactory<DependencyManifest extends object>(componentRegistry : ConsistentDependencyManifest<DependencyManifest>) : ContainerType<DependencyManifest> {
     const componentDependencyHasBeenSupplied : {[k in keyof DependencyManifest]?: true} = {};
-    function isComponent(something : unknown) : something is Depends<DependencyManifest> {
+    function isComponent(something : unknown) : something is Component<DependencyManifest> {
         try {
             // assume something is a component, then it has a "depends" property, which is an object, 
             // and all its keys are in the component registry
-            const somethingAssumedToBeComponent = something as Depends<DependencyManifest>;
+            const somethingAssumedToBeComponent = something as Component<DependencyManifest>;
             return Object.getOwnPropertyNames(somethingAssumedToBeComponent.depends).every(key => key in (componentRegistry as object));
         } catch {
             // if anything goes wrong, it is not a component
