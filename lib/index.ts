@@ -15,9 +15,20 @@ export type ConsistentDependencyManifest<DependencyManifest extends object> = {
 }
 
 /**
+ * NoUndefined<T> is a mapped type that removes undefined from the types of the properties of T
+ */
+export type NoUndefined<T extends object> = {
+    [K in keyof T]: Exclude<T[K], undefined>
+};
+
+export type DependencyResolvedComponent<DependencyManifest extends object> = Component<NoUndefined<DependencyManifest>>;
+
+/**
  * A container is a function that takes a key and returns the corresponding component or value from the manifest, after resolving its dependencies
  */
-export type ContainerType<DependencyManifest> = <K extends keyof DependencyManifest>(k: K) => DependencyManifest[K];
+export type ContainerType<DependencyManifest> = 
+    <K extends keyof DependencyManifest>(k: K) => 
+        DependencyManifest[K] extends Component<infer ComponentDependencyManifest> ? DependencyResolvedComponent<ComponentDependencyManifest> : DependencyManifest[K];
 
 /**
  * A factory that can accepts a consistent dependency manifest, and returns a container that can resolve dependencies
@@ -37,7 +48,9 @@ export function containerFactory<DependencyManifest extends object>(componentReg
             return false;
         }
     }
-    const circularDependencyAwareContainer : <K extends keyof DependencyManifest>( k : K, componentDependencyChain: (keyof DependencyManifest)[]) =>  DependencyManifest[K] = ( k, componentDependencyChain) =>  {
+    const circularDependencyAwareContainer : 
+        <K extends keyof DependencyManifest>( k : K, componentDependencyChain: (keyof DependencyManifest)[]) => DependencyManifest[K] extends Component<infer ComponentDependencyManifest> ? DependencyResolvedComponent<ComponentDependencyManifest> : DependencyManifest[K]
+    = ( k, componentDependencyChain) =>  {
         const kComponent = componentRegistry[k];
         if (componentDependencyHasBeenSupplied[k]) {
             return kComponent as any;
@@ -51,7 +64,7 @@ export function containerFactory<DependencyManifest extends object>(componentReg
                 for (const eachDependencyKey of Object.getOwnPropertyNames(kComponent.depends) as (keyof DependencyManifest)[]) {
                     // recursively calls the factory to get each of its dependencies and supply to the component
                     const dependencyOfKComponentForTheDependencyKey = circularDependencyAwareContainer(eachDependencyKey, componentDependencyChainWithK);
-                    kComponent.depends[eachDependencyKey] = dependencyOfKComponentForTheDependencyKey;
+                    kComponent.depends[eachDependencyKey] = dependencyOfKComponentForTheDependencyKey as any;
                 }
             } else {
                 // kComponent is not a component, nothing to do

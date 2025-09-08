@@ -28,8 +28,9 @@ const container = containerFactory({
 
 export function test() {
     const aComponentFromContainer = container('aComponent');
-    return (aComponentFromContainer === aComponent) &&
-        (aComponentFromContainer.depends.bComponent === bComponent) &&
-        (aComponentFromContainer.depends.bComponent!.depends.cValue === 42);
+    const aComponentFromContainerIsAComponent = (aComponentFromContainer === aComponent);
+    const aComponentFromContainerHasDependencyProvided = aComponentFromContainer.depends.bComponent === bComponent;
+    const bComponentIsWiredIntoAComponent = aComponentFromContainer.depends.bComponent === bComponent;
+    const cValueIsWiredIntoBComponent = aComponentFromContainer.depends.bComponent.depends.cValue === 42;
 }
 

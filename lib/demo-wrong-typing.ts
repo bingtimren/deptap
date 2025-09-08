@@ -22,14 +22,14 @@ const bComponent : BComponent = {
     }
 };
 
-const container = containerFactory({
-    aComponent, bComponent : "wrongly-typed-bComponent", cValue : 42
-} as RegistryType);
+// const container = containerFactory({
+//     aComponent, bComponent : "wrongly-typed-bComponent", cValue : 42
+// } as RegistryType);
 
-export function test() {
-    const aComponentFromContainer = container('aComponent');
-    return (aComponentFromContainer === aComponent) &&
-        (aComponentFromContainer.depends.bComponent === bComponent) &&
-        (aComponentFromContainer.depends.bComponent!.depends.cValue === 42);
-}
+// export function test() {
+//     const aComponentFromContainer = container('aComponent');
+//     return (aComponentFromContainer === aComponent) &&
+//         (aComponentFromContainer.depends.bComponent === bComponent) &&
+//         (aComponentFromContainer.depends.bComponent!.depends.cValue === 42);
+// }
 

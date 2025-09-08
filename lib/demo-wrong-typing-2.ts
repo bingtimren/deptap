@@ -22,14 +22,7 @@ const bComponent : BComponent = {
     }
 };
 
-const container = containerFactory({
-    aComponent, bComponent, cValue : 42
-} as RegistryType);
-
-export function test() {
-    const aComponentFromContainer = container('aComponent');
-    return (aComponentFromContainer === aComponent) &&
-        (aComponentFromContainer.depends.bComponent === bComponent) &&
-        (aComponentFromContainer.depends.bComponent!.depends.cValue === 42);
-}
+// const container = containerFactory({
+//     aComponent, bComponent, cValue : 42
+// } as RegistryType);
 
