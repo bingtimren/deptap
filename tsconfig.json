@@ -15,5 +15,5 @@
       "#deptap": ["lib/index.ts"]
     }
   },
-  "include": ["lib/**/*"] // Only include lib for the build
+  "include": ["lib/**/*.ts"]
 }
