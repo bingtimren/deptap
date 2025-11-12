@@ -1,5 +1,5 @@
 {
-  "name": "degtap",
+  "name": "deptap",
   "version": "1.0.0",
   "description": "A minimalist, typed, 'supply and demand' package for decoupling users and supplier of some dependencies",
   "type": "module",
