@@ -1,6 +1,6 @@
 {
   "name": "deptap",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimalist, typed, 'supply and demand' package for decoupling users and supplier of some dependencies",
   "type": "module",
   "module": "./dist/lib/index.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bingtieren/degtap.git"
+    "url": "git+https://github.com/bingtimren/deptap.git"
   },
   "keywords": [],
   "author": "",
